@@ -1,0 +1,171 @@
+/*
+** Dibuat oleh: Fufun Dany Artheja
+** No. Peserta: 091258129131-101
+*/
+
+/* 
+** [PRAKTIK - 01] | Urutan perintah yang dilakukan untuk membuat database marketdb dan dengan nama collection-nya products adalah....
+*/
+use marketDB;
+db.createCollection("products");
+
+
+/* 
+** [PRAKTIK - 02] | Manakah dari perintah berikut yang akan berhasil memasukkan 3 dokumen baru ke dalam koleksi products yang kosong ?
+*/
+db.products.insertMany([
+    {_id: 1, name: "Indomie Goreng"},
+    {_id: 2, name: "Indomie Kuah"},
+    {_id: 3, name: "Sarimie"}
+])
+
+
+/* 
+** [PRAKTIK - 03] | Urutan perintah yang digunakan untuk menghapus collection products pada database marketdb saat pertama kali membuka mongoshell adalah....
+*/
+use marketDB;
+db.products.drop()
+
+
+/* 
+** [PRAKTIK - 04] | Jalankan perintah insertMany dari script ini: https://gist.github.com/joesoeph/7f1dfded51db1d08afe2bdff4e43a831. Gunakan perintah itu untuk insert dokumen pada collection products yang ada di database marketdb. Setelah melakukan insert, berapa dokumen yang berhasil tersimpan? 16
+*/ 
+
+
+/* 
+** [PRAKTIK - 05] | Berdasarkan praktik 04, berapa nilai _id yang terbesar? 15
+*/
+
+
+/* 
+** [PRAKTIK - 06] | Perintah query untuk mencari produk yang stock nya tidak lebih dari 50 dan salah satu suppliers nya ada yang beralamat di kota Bandung adalah....
+*/
+db.products.find({
+	stock:{ $lte: 50 },
+	suppliers: { $elemMatch: {city: "Bandung" }}
+});
+db.products.find({
+  stock:{ $lte: 50 },
+  "suppliers.city": "Bandung"
+});
+
+
+/* 
+** [PRAKTIK - 07] | Perintah query untuk menampilkan dokumen yang tidak memiliki field suppliers adalah....
+*/
+db.products.find({
+  suppliers: { $exists: false }
+});
+db.products.find({
+  suppliers: { $exists: 0 }
+});
+
+
+/* 
+** [PRAKTIK - 08] | Dari soal [PRAKTIK - 06], perintah query untuk menampilkan dokumen hanya field name, price, stock, dan unit nya saja adalah....
+*/
+db.products.find({
+  stock:{ $lte: 50 },
+  "suppliers.city": "Bandung"
+},
+{
+  _id: 0,
+  name: 1,
+  price: 1,
+  stock: 1,
+  unit: 1
+});
+db.products.find({
+  stock:{ $lt: 50 },
+  "suppliers.city": "Bandung"
+},
+{
+  _id: 0,
+  name: 1,
+  price: 1,
+  stock: 1,
+  unit: 1
+});
+db.products.find({
+	stock:{ $lte: 50 },
+	suppliers: { $elemMatch: {city: "Bandung" }}
+},
+{
+  _id: 0,
+  name: 1,
+  price: 1,
+  stock: 1,
+  unit: 1
+});
+db.products.find({
+	stock:{ $lt: 50 },
+	suppliers: { $elemMatch: {city: "Bandung" }}
+},
+{
+  _id: 0,
+  name: 1,
+  price: 1,
+  stock: 1,
+  unit: 1
+});
+
+
+/* 
+** [PRAKTIK - 09] | Perintah query untuk menampilkan total dokumen yang memiliki field suppliers adalah....
+*/
+db.products.find({
+  suppliers: { $exists: true }
+}).count()
+
+
+/* 
+** [PRAKTIK - 10] | Perintah yang digunakan untuk menampilkan 5 dokumen products, yang memiliki stock terbanyak adalah....
+*/
+db.products.find().sort({ stock: -1}).limit(5);
+db.products.find().limit(5).sort({ stock: -1});
+           
+
+/* 
+** [PRAKTIK - 11] | Perintah untuk melakukan insert dokumen baru dengan ketentuan field seperti gambar ini adalah....
+*/
+db.products.insertOne({
+  id: 16,
+  name: "Paramex",
+  stock: "30",
+  unit: "strip"
+})
+
+
+/* 
+** [PRAKTIK - 12] | Lanjutan dari [PRAKTIK - 11], perintah yang digunakan untuk melakukan update dokumen yang field id adalah 16 dengan hasil akhir sesuai gambar ini adalah....
+*/
+db.products.replaceOne({
+  id: 16
+},{
+  _id: 16,
+  name: "Paramex",
+  stock: 30,
+  unit: "strip",
+  categories: ["kimia","obat"]
+})
+
+
+/* 
+** [PRAKTIK - 13] | Perintah yang digunakan untuk menambahkan field description dengan value "Harga jual per strip, stok dalam strip" pada dokumen dengan id 16 adalah tidak ada opsi yang bisa dijalankan
+*/
+db.products.updateOne({
+  id: 16
+},{
+  $set: { description: "harga jual per strip, stok dalam strip" }
+});
+
+/* 
+** [PRAKTIK - 14] | Urutan perintah yang digunakan untuk menghapus collection product pada database marketdb saat pertama kali menjalankan mongoshell adalah....
+*/
+use marketDB;
+db.products.drop()
+
+
+/* 
+** [PRAKTIK - 15] | Masukkan perintah untuk mengecek berapa jumlah collection pada database marketdb yang sudah kamu buat selama menyelesaikan soal sebelumnya. Berapa jumlah collection yang kamu miliki? 0
+*/
